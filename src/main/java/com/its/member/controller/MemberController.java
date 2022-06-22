@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -31,9 +32,11 @@ public class MemberController {
         return "memberPages/login";
     }
     @PostMapping("/login")
-    public String login(MemberDTO memberDTO) {
-      boolean loginResult = memberService.login(memberDTO);
-      if(loginResult) {
+    public String login(MemberDTO memberDTO, HttpSession session) {
+      MemberDTO loginResult = memberService.login(memberDTO);
+      if(loginResult != null) {
+          session.setAttribute("loginEmail", loginResult.getMemberEmail());
+          session.setAttribute("id", loginResult.getId());
           return "memberPages/main";
       }else {
           return "memberPages/login";

@@ -16,7 +16,15 @@ public class MemberDTO {
     private int memberAge;
     private String memberPhone;
 
-    public static MemberDTO toDTO(MemberEntity memberEntity) {
+    public MemberDTO(String memberEmail, String memberPassword, String memberName, int memberAge, String memberPhone) {
+        this.memberEmail = memberEmail;
+        this.memberPassword = memberPassword;
+        this.memberName = memberName;
+        this.memberAge = memberAge;
+        this.memberPhone = memberPhone;
+    }
+
+    public static MemberDTO toMemberDTO(MemberEntity memberEntity) {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setId(memberEntity.getId());
         memberDTO.setMemberEmail(memberEntity.getMemberEmail());
