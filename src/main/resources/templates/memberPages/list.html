@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
@@ -16,7 +16,10 @@
             <th>이름</th>
             <th>나이</th>
             <th>핸드폰</th>
+            <th>조회</th>
             <th>상세조회</th>
+            <th>삭제</th>
+            <th>삭제(ajax)</th>
         </tr>
         <tr th:each="member: ${memberList}">
             <td th:text="${member.id}"></td>
@@ -28,7 +31,66 @@
             <td>
                 <a th:href="@{|/member/${member.id}|}">조회</a>
             </td>
+
+            <td><button th:onclick="detail([[${member.id}]])">조회(ajax)</button></td>
+            <td>
+                <a th:href="@{|/member/deleteById/${member.id}|}">삭제</a>
+            </td>
+            <!-- 삭제 요청을 ajax로. type을 post가 아닌 delete로 하고
+            controller에서 @DeleteMapping을 사용함.(삭제하는 코드는 동일함)-->
+            <td><button th:onclick="deleteByIdAjax([[${member.id}]])">삭제(ajax)</button></td>
         </tr>
     </table>
+<div id="member-detail">
+
+</div>
 </body>
+<script th:inline="javascript">
+    const deleteByIdAjax = (id) => {
+        $.ajax({
+            type: "delete",
+            url: "/member/"+id,
+            dataType: "text",
+            success: function () { // status code = 200
+                location.href = "/member/findAll";
+            },
+            error: function () {
+                alert("ajax 실패");
+            }
+        })
+    }
+    const detail = (id) => {
+
+        $.ajax({
+            type: "post",
+            url: "/member/ajax/" +id,
+            dataType: "json",
+            success:function (result) {
+                console.log(result)
+                let detailView = "    <table>\n" +
+                    "        <tr>\n" +
+                    "            <th>id</th>\n" +
+                    "            <th>email</th>\n" +
+                    "            <th>password</th>\n" +
+                    "            <th>name</th>\n" +
+                    "            <th>age</th>\n" +
+                    "            <th>mobile</th>\n" +
+                    "        </tr>\n" +
+                    "        <tr>\n" +
+                    "            <td>"+result.id+"</td>\n" +
+                    "            <td>"+result.memberEmail+"</td>\n" +
+                    "            <td>"+result.memberPassword+"</td>\n" +
+                    "            <td>"+result.memberName+"</td>\n" +
+                    "            <td>"+result.memberAge+"</td>\n" +
+                    "            <td>"+result.memberPhone+"</td>\n" +
+                    "        </tr>\n" +
+                    "    </table>"
+                document.getElementById("member-detail").innerHTML = detailView;
+            },
+            error:function () {
+                alert("error");
+            }
+        })
+    }
+</script>
 </html>

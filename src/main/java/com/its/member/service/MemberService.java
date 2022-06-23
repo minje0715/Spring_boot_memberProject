@@ -6,6 +6,7 @@ import com.its.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class MemberService {
 
     public Long save(MemberDTO memberDTO) {
 //      memberRepository.save(MemberEntity.toSaveEntity(memberDTO));
-        MemberEntity memberEntity = MemberEntity.toEntity(memberDTO);
+        MemberEntity memberEntity = MemberEntity.toSaveEntity(memberDTO);
         Long saveId = memberRepository.save(memberEntity).getId();
         return saveId;
     }
@@ -63,5 +64,13 @@ public class MemberService {
         }else {
             return null;
         }
+    }
+
+    public void deleteById(Long id) {
+        memberRepository.deleteById(id);
+    }
+
+    public void update(MemberDTO memberDTO) {
+       memberRepository.save(MemberEntity.toUpdateEntity(memberDTO));
     }
 }

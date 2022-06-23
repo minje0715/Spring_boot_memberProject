@@ -31,8 +31,18 @@ public class MemberEntity {
     @Column(name = "memberPhone", length = 30)
     private String memberPhone;
 
-    public static MemberEntity toEntity(MemberDTO memberDTO){
+    public static MemberEntity toSaveEntity(MemberDTO memberDTO){
         MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberAge(memberDTO.getMemberAge());
+        memberEntity.setMemberPhone(memberDTO.getMemberPhone());
+        return memberEntity;
+    }
+    public static MemberEntity toUpdateEntity(MemberDTO memberDTO) {
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(memberDTO.getId());
         memberEntity.setMemberEmail(memberDTO.getMemberEmail());
         memberEntity.setMemberPassword(memberDTO.getMemberPassword());
         memberEntity.setMemberName(memberDTO.getMemberName());
