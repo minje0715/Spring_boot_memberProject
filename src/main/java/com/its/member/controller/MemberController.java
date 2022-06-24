@@ -121,4 +121,11 @@ public class MemberController {
         return checkResult;
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 전체를 무효화
+        session.removeAttribute("loginEmail"); // loginEmail 세션값 삭제
+        return "redirect:/";
+    }
+
 }
