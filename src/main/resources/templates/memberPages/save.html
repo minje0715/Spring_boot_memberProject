@@ -1,18 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
     <form action="/member/save" method="post">
-        <input type="text"  name="memberEmail" placeholder="memberEmail"> <br>
+        <input type="text" id="memberEmail" name="memberEmail" placeholder="memberEmail" onblur="duplicateCheck()"> <br>
+        <span id="email-dup-result"></span> <br>
         <input type="text"  name="memberPassword" placeholder="memberPassword"> <br>
         <input type="text"  name="memberName" placeholder="memberName"> <br>
         <input type="text"  name="memberAge" placeholder="memberAge"> <br>
         <input type="text"  name="memberPhone" placeholder="memberPhone"> <br>
-        <input type="submit" value="회원가입">
+        <input type="submit"  value="회원가입">
     </form>
 </div>
 </body>
+<script th:inline="javascript">
+    function duplicateCheck () {
+        const email = document.getElementById("memberEmail").value;
+        const checkResult = document.getElementById("email-dup-result");
+        $.ajax({
+            type: "post",
+            url: "/member/emailCheck",
+            data: {"memberEmail":email},
+            dataType: "text",
+            success:function (result) {
+                if(result == "ok") {
+                    checkResult.innerHTML = "사용가능합니다";
+                    checkResult.style.color = "green";
+                }else{
+                    checkResult.innerHTML = "사용중입니다";
+                    checkResult.style.color = "red";
+                }
+            },
+            error:function (){
+                alert("오류")
+            }
+        })
+    }
+</script>
 </html>

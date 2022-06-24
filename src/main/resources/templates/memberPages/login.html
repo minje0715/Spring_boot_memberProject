@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="../resources/css/bootstrap.min.css">
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
 <body>
 <div class="container">
     <form action="/member/login" method="post">
+        <input type="hidden" name="redirectURL" th:value="${redirectURL}">
         <input type="text" name="memberEmail" placeholder="memberEmail">
         <input type="text" name="memberPassword" placeholder="memberPassword">
         <button class="btn btn-primary">로그인</button>

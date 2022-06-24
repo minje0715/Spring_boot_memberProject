@@ -32,17 +32,23 @@ public class MemberController {
     }
 
     @GetMapping("/login-form")
-    public String loginForm() {
+    public String loginForm(@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL,
+                          Model model) {
+        model.addAttribute("redirectURL", redirectURL);
         return "memberPages/login";
     }
 
     @PostMapping("/login")
-    public String login(MemberDTO memberDTO, HttpSession session) {
+    public String login(MemberDTO memberDTO, HttpSession session,
+                        @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL) {
         MemberDTO loginResult = memberService.login(memberDTO);
         if (loginResult != null) {
             session.setAttribute("loginEmail", loginResult.getMemberEmail());
             session.setAttribute("id", loginResult.getId());
-            return "memberPages/mypage";
+//            return "memberPages/mypage";
+
+            // 로그인 하지 않은 사용자가 로그인 직전에 요청한 주소로 보내줌
+            return "redirect:" + redirectURL;
         } else {
             return "memberPages/login";
         }
@@ -107,6 +113,12 @@ public class MemberController {
     public ResponseEntity updateByAjax(@RequestBody MemberDTO memberDTO) {
         memberService.update(memberDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/emailCheck")
+    public @ResponseBody String emailCheck(@RequestParam String memberEmail) {
+        String checkResult = memberService.emailCheck(memberEmail);
+        return checkResult;
     }
 
 }
